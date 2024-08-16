@@ -9,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +26,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.internal.StabilityInferred
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -35,20 +40,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.aprendiendo.ui.theme.AprendiendoTheme
+import kotlin.math.exp
 
 private val messeges: List<MyMesseges> = listOf(
-    MyMesseges("Hola mundo1 ", "soy una lista"),
-    MyMesseges("Hola mundo2 ", "soy una lista"),
-    MyMesseges("Hola mundo3 ", "soy una lista"),
-    MyMesseges("Hola mundo4 ", "soy una lista"),
-    MyMesseges("Hola mundo5 ", "soy una lista"),
-    MyMesseges("Hola mundo6 ", "soy una lista"),
-    MyMesseges("Hola mundo7 ", "soy una lista"),
-    MyMesseges("Hola mundo8 ", "soy una lista"),
-    MyMesseges("Hola mundo9", "soy una lista"),
-    MyMesseges("Hola mundo10 ", "soy una lista"),
-    MyMesseges("Hola mundo11 ", "soy una lista"),
-    MyMesseges("Hola mundo12 ", "soy una lista"))
+    MyMesseges("Hola mundo1 ", "soy una lista La vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo2 ", "soy una lista La vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo3 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo4 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo5 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo6 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo7 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo8 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo9", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo10 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo11 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."),
+    MyMesseges("Hola mundo12 ", "soy una listaLa vida es un viaje lleno de desafíos y alegrías, donde cada paso nos acerca a nuestro verdadero propósito. A lo largo del camino, encontramos personas que nos inspiran y situaciones que nos enseñan valiosas lecciones. A veces, el camino puede parecer incierto, pero es en esos momentos de incertidumbre cuando descubrimos nuestra verdadera fuerza."))
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,16 +68,23 @@ class MainActivity : ComponentActivity() {
     }
 }
 @Composable
-fun MyText(text: String, color: Color , style: TextStyle){
-    Text(text, color = color, style = style)
+fun MyText(text: String, color: Color , style: TextStyle, lines:Int = Int.MAX_VALUE){
+    Text(text, color = color, style = style, maxLines = lines )
 }
 
 @Composable
 fun MyTexts(messeges: MyMesseges){
-    Column (modifier = Modifier.padding(8.dp)) {
+    var expanded by remember { mutableStateOf(false  ) 
+    }
+    Column (modifier = Modifier
+        .padding(8.dp)
+        .clickable {
+            expanded = !expanded
+        }) {
         MyText(messeges.tile,MaterialTheme.colorScheme.secondary, MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(4.dp))
-        MyText(messeges.body, MaterialTheme.colorScheme.onBackground, MaterialTheme.typography.titleMedium)
+        MyText(messeges.body, MaterialTheme.colorScheme.onBackground, MaterialTheme.typography.titleMedium, if(expanded) Int.MAX_VALUE else 1 )
+
     }
 
 }
